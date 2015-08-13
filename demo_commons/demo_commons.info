@@ -1,0 +1,17 @@
+name = Demo Commons
+description = Common components for Demo features
+core = 7.x
+package = Demo
+dependencies[] = features
+dependencies[] = filter
+dependencies[] = image
+dependencies[] = text
+dependencies[] = wysiwyg
+features[features_api][] = api:2
+features[field_base][] = body
+features[filter][] = filtered_html
+features[filter][] = full_html
+features[image][] = tiny_50x50_
+features[user_role][] = content editor
+features[wysiwyg][] = filtered_html
+features[wysiwyg][] = full_html
