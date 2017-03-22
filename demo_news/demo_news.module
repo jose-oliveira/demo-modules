@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Demo news feature.
- */
-
-include_once 'demo_news.features.inc';
