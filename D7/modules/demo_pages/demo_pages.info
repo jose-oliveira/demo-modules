@@ -1,0 +1,4 @@
+name = Demo Pages
+description = Example pages
+core = 7.x
+package = demo

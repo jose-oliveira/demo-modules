@@ -1,5 +1,0 @@
-name: Demo pages
-description: Defines a couple of demo pages.
-type: module
-core: 8.x
-package: Demo

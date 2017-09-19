@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * Implements hook_views_query_alter(&$view, &$query)
+ */
+function demo_related_views_query_alter(&$view, &$query){
+
+  if($view->name == "articles" && $view->current_display == "page_1"){
+    $node = node_load(arg(2));
+    $value = $node->field_campaign[LANGUAGE_NONE][0]['value'];
+    _demo_filter_field_by_url($view, $query, 'field_campaign', $value);
+  }
+
+}
+
+function _demo_filter_field_by_url(&$view, &$query, $field_name, $value){
+  $field_table = 'field_data_' . $field_name;
+  $join = new views_join;
+  $join->construct($field_table, "node", "nid", "entity_id", array(), "LEFT");
+
+  $view->query->add_relationship($field_table, $join, "node");
+
+  $query->add_where(2,$field_table . '.' . $field_name . '_value', $value, "LIKE");
+
+}

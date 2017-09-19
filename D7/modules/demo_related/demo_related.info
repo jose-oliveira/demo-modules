@@ -1,0 +1,4 @@
+name = Demo Related Campaign
+core = 7.x
+dependencies[] = views
+package = demo

@@ -1,0 +1,4 @@
+name = Demo random image
+description = Shows a random image from an image set
+core = 7.x
+package = demo

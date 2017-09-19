@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+/**
+ * Implements hook_field_formatter_info().
+ */
+function demo_random_image_field_formatter_info() {
+
+  return array(
+    'random_image' => array(
+      'label' => t('Random image'),
+      'field types' => array('image'),
+    ),
+  );
+
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function demo_random_image_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+    case 'random_image':
+
+      $image_urls = [];
+      foreach($items as $item) {
+          $image_urls[] = file_create_url($item['uri']);
+      }
+        $element[] = array(
+          '#theme' => 'random_image',
+          '#image_urls' => $image_urls,
+        );
+
+        $element['#attached']['js'][] = drupal_get_path('module', 'demo_random_image') . '/js/random_images.js';
+
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_theme.
+ */
+function demo_random_image_theme($existing, $type, $theme, $path) {
+  return array(
+    'random_image' => array(
+      'variables' => array('image_urls' => NULL),
+      'template' => 'templates/random-image',
+      )
+  );
+}
