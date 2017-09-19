@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Cogeco Bartik theme.
+ */
+
+function demo_bartik_preprocess_field__node__field_image__article(&$variables){
+  $variables['#attached']['library'][] = 'demo_bartik/random-image';
+}
