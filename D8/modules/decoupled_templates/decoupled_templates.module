@@ -7,7 +7,7 @@ function decoupled_templates_preprocess_block(&$variables) {
     $block_type = $block_entity->bundle();
 
     //@TODO Make this list configurable
-    $remote_blocks = array("slideshow");
+    $remote_blocks = array("basic");
 
     if(in_array($block_type, $remote_blocks)){
       $remote_content = _decoupled_templates_get_remote_content($block_entity);
