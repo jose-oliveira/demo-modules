@@ -1,0 +1,46 @@
+<?php
+
+function decoupled_templates_preprocess_block(&$variables) {
+  /* @var \Drupal\block_content\Entity\BlockContent $block_entity*/
+  $block_entity = $variables['content']['#block_content'];
+  if($block_entity){
+    $block_type = $block_entity->bundle();
+
+    //@TODO Make this list configurable
+    $remote_blocks = array("slideshow");
+
+    if(in_array($block_type, $remote_blocks)){
+      $remote_content = _decoupled_templates_get_remote_content($block_entity);
+      //@TODO This just completely overrides the render array and displays whatever HTML the API returned. Find a more extensible and secure way to do this.
+      $variables['content'] = [
+        '#type' => 'inline_template',
+        '#template' => $remote_content,
+      ];
+    }
+  }
+}
+
+//@TODO Abstract this to a service
+/* @var \Drupal\block_content\Entity\BlockContent $block*/
+function _decoupled_templates_get_remote_content($block){
+  $client = \Drupal::httpClient();
+  //@TODO Make this URL configurable
+  $response = $client->request('GET', 'https://googlechrome.github.io/samples/fetch-api/users.html', [
+    'query' => [
+      'type' => $block->bundle(),
+      'fields' => _decoupled_templates_get_fields_string($block),
+    ]
+  ]);
+  return (string) $response->getBody();
+}
+
+//@TODO There's probably a better way to do this.
+/* @var \Drupal\block_content\Entity\BlockContent $block*/
+function _decoupled_templates_get_fields_string($block){
+  $fields = [];
+  $block_fields = $block->getFields();
+  foreach($block_fields as $block_field_name => $block_field){
+    $fields[$block_field_name] = $block_field->getValue();
+  }
+  return $fields;
+}

@@ -1,0 +1,4 @@
+name: Decoupled templates
+type: module
+description: Sends entity information to an API and display its response.
+core: 8.x
