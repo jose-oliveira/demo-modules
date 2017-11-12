@@ -1,46 +1,58 @@
 <?php
 
+/**
+ * Implements hook_preprocess_block
+ */
 function decoupled_templates_preprocess_block(&$variables) {
   /* @var \Drupal\block_content\Entity\BlockContent $block_entity*/
   $block_entity = $variables['content']['#block_content'];
-  if($block_entity){
-    $block_type = $block_entity->bundle();
-
-    //@TODO Make this list configurable
-    $remote_blocks = array("basic");
-
-    if(in_array($block_type, $remote_blocks)){
-      $remote_content = _decoupled_templates_get_remote_content($block_entity);
-      //@TODO This just completely overrides the render array and displays whatever HTML the API returned. Find a more extensible and secure way to do this.
+  if(_decoupled_templates_entity_is_decoupled($block_entity)){
+    $decoupled_content = _decoupled_templates_get_decoupled_content($block_entity);
       $variables['content'] = [
         '#type' => 'inline_template',
-        '#template' => $remote_content,
+        '#template' => $decoupled_content,
       ];
-    }
   }
 }
 
+/* @var \Drupal\Core\Entity\ContentEntityBase $entity*/
+function _decoupled_templates_entity_is_decoupled($entity) {
+  if($entity){
+    $bundle = $entity->bundle();
+    $decoupled_bundles = _decoupled_templates_get_bundles($entity->getEntityTypeId());
+
+    return in_array($bundle, $decoupled_bundles);
+  }
+  return false;
+}
+//@TODO Make this configurable
+function _decoupled_templates_get_bundles($entity_type){
+  $decoupled_bundles = ['block_content' => ['basic']];
+  return isset($decoupled_bundles[$entity_type]) ? $decoupled_bundles[$entity_type] : [];
+}
+
 //@TODO Abstract this to a service
-/* @var \Drupal\block_content\Entity\BlockContent $block*/
-function _decoupled_templates_get_remote_content($block){
+/* @var \Drupal\Core\Entity\ContentEntityBase $entity*/
+function _decoupled_templates_get_decoupled_content($entity){
   $client = \Drupal::httpClient();
   //@TODO Make this URL configurable
   $response = $client->request('GET', 'https://googlechrome.github.io/samples/fetch-api/users.html', [
     'query' => [
-      'type' => $block->bundle(),
-      'fields' => _decoupled_templates_get_fields_string($block),
+      'type' => $entity->bundle(),
+      'fields' => _decoupled_templates_get_fields_string($entity),
     ]
   ]);
-  return (string) $response->getBody();
+  //@TODO Make text format configurable
+  return check_markup((string) $response->getBody(), 'restricted_html');
 }
 
 //@TODO There's probably a better way to do this.
-/* @var \Drupal\block_content\Entity\BlockContent $block*/
-function _decoupled_templates_get_fields_string($block){
+/* @var \Drupal\Core\Entity\ContentEntityBase $entity*/
+function _decoupled_templates_get_fields_string($entity){
   $fields = [];
-  $block_fields = $block->getFields();
-  foreach($block_fields as $block_field_name => $block_field){
-    $fields[$block_field_name] = $block_field->getValue();
+  $entity_fields = $entity->getFields();
+  foreach($entity_fields as $field_name => $field){
+    $fields[$field_name] = $field->getValue();
   }
   return $fields;
 }
