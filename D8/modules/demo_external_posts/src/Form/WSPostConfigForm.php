@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\demo_pages\Form;
+namespace Drupal\demo_external_posts\Form;
 
 
 use Drupal\Component\Utility\UrlHelper;
@@ -21,7 +21,7 @@ class WSPostConfigForm extends ConfigFormBase {
    * {@inheritdoc}.
    */
   protected function getEditableConfigNames() {
-    return ['demo_pages.settings'];
+    return ['demo_external_posts.settings'];
   }
 
   /**
@@ -40,14 +40,14 @@ class WSPostConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $config = $this->config('demo_pages.settings');
+    $config = $this->config('demo_external_posts.settings');
 
     $form['url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Posts service base url'),
       '#description' => $this->t('The base url for our posts API.'),
       '#required' => TRUE,
-      '#default_value' => $config->get('demo_pages_ws_posts_url'),
+      '#default_value' => $config->get('demo_external_posts_ws_posts_url'),
     ];
 
     // Group submit handlers in an actions element with a key of "actions" so
@@ -111,8 +111,8 @@ class WSPostConfigForm extends ConfigFormBase {
    *   Object describing the current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('demo_pages.settings');
-    $config->set('demo_pages_ws_posts_url', $form_state->getValue('url'));
+    $config = $this->config('demo_external_posts.settings');
+    $config->set('demo_external_posts_ws_posts_url', $form_state->getValue('url'));
     $config->save();
     return parent::submitForm($form, $form_state);
   }

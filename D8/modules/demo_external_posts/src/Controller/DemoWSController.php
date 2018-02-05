@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\demo_pages\Controller;
+namespace Drupal\demo_external_posts\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
-use Drupal\demo_pages\WSPosts;
+use Drupal\demo_external_posts\WSPosts;
 use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Controller routines for demo pages routes.
+ * Controller routines for this module's routes.
  */
 class DemoWSController extends ControllerBase {
 
@@ -23,7 +23,7 @@ class DemoWSController extends ControllerBase {
 
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('demo_pages.ws_posts')
+      $container->get('demo_external_posts.ws_posts')
     );
   }
 
@@ -32,7 +32,12 @@ class DemoWSController extends ControllerBase {
 
     $posts_titles = [];
     foreach ($posts as $post) {
-      $posts_titles[] = Link::createFromRoute($post->title, 'demo_pages_ws_post', array('post_id' => $post->id));
+
+      if (!is_object($post)) {
+        continue;
+      }
+
+      $posts_titles[] = Link::createFromRoute($post->title, 'demo_external_posts_ws_post', array('post_id' => $post->id));
     }
 
     $posts_per_page = 10;
@@ -53,21 +58,7 @@ class DemoWSController extends ControllerBase {
 
   public function post($post_id) {
 
-    $post = $this->ws_posts->getPost($post_id);
+    return $this->ws_posts->renderPost($post_id);
 
-    $elements['title'] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'h1',
-      '#value' => $post->title,
-    );
-
-
-    $elements['body'] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => $post->body,
-    );
-
-    return $elements;
   }
 }
