@@ -2,7 +2,6 @@
 
 namespace Drupal\demo_external_posts\Form;
 
-
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 class WSPostConfigForm extends ConfigFormBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return ['demo_external_posts.settings'];
@@ -32,7 +31,7 @@ class WSPostConfigForm extends ConfigFormBase {
    *
    * @param array $form
    *   Default form array structure.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Object containing current form state.
    *
    * @return array
@@ -88,7 +87,7 @@ class WSPostConfigForm extends ConfigFormBase {
    *
    * @param array $form
    *   The render array of the currently built form.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Object describing the current state of the form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -107,7 +106,7 @@ class WSPostConfigForm extends ConfigFormBase {
    *
    * @param array $form
    *   The render array of the currently built form.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Object describing the current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {

@@ -2,12 +2,15 @@
 
 namespace Drupal\demo_external_posts\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Serialization\Json;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\demo_external_posts\WSPosts;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'webform_workflow_formatter' formatter.
+ * Plugin implementation of the 'demo_external_posts_formatter' formatter.
  *
  * @FieldFormatter(
  *   id = "demo_external_posts_formatter",
@@ -17,17 +20,35 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   }
  * )
  */
-class DemoExternalPostsFormatter extends FormatterBase {
+class DemoExternalPostsFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
 
-  protected $ws_posts;
+  protected $wsPosts;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      // External posts service.
+      $container->get('demo_external_posts.ws_posts')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, WSPosts $wsPosts) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->ws_posts = \Drupal::service('demo_external_posts.ws_posts');
+
+    $this->wsPosts = $wsPosts;
   }
 
   /**
@@ -38,7 +59,7 @@ class DemoExternalPostsFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       $post_id = $item->get('post_id')->getValue();
-      $elements[$delta] = $this->ws_posts->renderPost($post_id);
+      $elements[$delta] = $this->wsPosts->renderPost($post_id);
     }
 
     return $elements;
