@@ -37,6 +37,8 @@
  * @see template_preprocess_field()
  */
 #}
+{{ attach_library('demo_bartik/random-image') }}
+
 {%
 set classes = [
 'field',
@@ -53,6 +55,12 @@ label_display == 'visually_hidden' ? 'visually-hidden',
 %}
 
 {% set srcs = [] %}
+
+{% trans %}
+  Only 1 image, no randomness.
+{% plural itemsCount %}
+  Choosing one image out of {{ itemsCount }}.
+{% endtrans %}
 
 {% if label_hidden %}
   {% if multiple %}
@@ -76,8 +84,9 @@ label_display == 'visually_hidden' ? 'visually-hidden',
     <div class="field__items">
       {% endif %}
       {% for item in items %}
-        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
+        {% set srcs = srcs|merge([item.content['#markup']]) %}
       {% endfor %}
+      <img data-random-srcs="{{ srcs|join(',') }}" class="random-image"/>
       {% if multiple %}
     </div>
     {% endif %}

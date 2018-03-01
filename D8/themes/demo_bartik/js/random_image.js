@@ -3,11 +3,9 @@
  */
 (function () {
 
-    "use strict";
-
     function random_image(image) {
         var srcs = image.dataset.randomSrcs.split(",");
-        var randomIndex = Math.floor(Math.random() * (srcs.length - 1));
+        var randomIndex = Math.floor(Math.random() * (srcs.length));
         image.src = srcs[randomIndex];
     }
 
