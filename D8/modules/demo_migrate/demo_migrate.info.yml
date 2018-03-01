@@ -4,4 +4,7 @@ core: 8.x
 type: module
 package: Demo
 dependencies:
-  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - drupal:migrate_upgrade
+  - drupal:field_collection

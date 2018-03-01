@@ -37,7 +37,7 @@ process:
       value: value
       format:
         plugin: default_value
-        default_value: rich_text
+        default_value: restricted_html
   field_paragraphs:
     plugin: iterator
     source: field_paragraphs

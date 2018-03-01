@@ -16,7 +16,7 @@ shared_configuration:
       driver: mysql
       username: drupaluser
       password: ''
-      host: 10.0.2.2
+      host: 127.0.0.1
       port: '33067'
       database: site1
       prefix: null
