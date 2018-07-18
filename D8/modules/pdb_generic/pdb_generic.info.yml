@@ -1,0 +1,6 @@
+name: PDB Generic
+description: Create simple blocks based on given HTML.
+core: 8.x
+type: module
+dependencies:
+  - pdb

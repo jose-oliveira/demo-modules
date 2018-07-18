@@ -1,0 +1,6 @@
+name: Simple generic block example
+component_path: modules/custom/pdb_generic/components/pdb_generic_example_1/index.html
+type: pdb
+description: 'Simple block example 1'
+core: 8.x
+presentation: generic
