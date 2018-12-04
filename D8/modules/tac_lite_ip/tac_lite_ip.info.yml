@@ -1,0 +1,7 @@
+name: Taxonomy Access Control Lite by IP
+type: module
+description: 'Selects a taxonomy for anonymous users based on their IP.'
+package: Access control
+core: '8.x'
+dependencies:
+- tac_lite
